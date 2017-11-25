@@ -1,26 +1,47 @@
-public class MainActivity extends AppCompatActivity implements  MovieAPIAndRecyclerViewContract.View{
+public class MainActivity extends AppCompatActivity implements  MovieAPIAndRecyclerViewContract.View,
+        MovieAPIPresenter.MovieAPIPresenterListener{
+
+    MoviesListPresenter moviesListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        VehicleComponent component = DaggerVehicleComponent.builder().vehicleModule(new VehicleModule()).build();
+//        component.provideVehicle();
+
         Resources resources = getResources();
         APIServiceModel apiServiceModel = new APIServiceModel(resources.getString(R.string.base_url));
 
 
-
-        new MainPresenter(apiServiceModel, this, new MoviesListPresenter()).setUpRecyclerView(
-                (RecyclerView) findViewById(R.id.recyclerView),
-                new LinearLayoutManager(this), new ArrayList()
-                );
-
+         moviesListPresenter = new MoviesListPresenter();
+        new MainPresenter(apiServiceModel, this, this).setRecyclerViewData();
 
 
     }
 
     @Override
+    public void setUpRecyclerView(RecyclerView recyclerView, LinearLayoutManager linearLayoutManager) {
+        Log.d("blue", "setUpRecyclerView");
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(new MoviesAdapter(moviesListPresenter));
+    }
+
+    @Override
     public String getAPIKey() {
         return getResources().getString(R.string.api_key);
+    }
+
+    @Override
+    public void moviesReady(List movies) {
+        moviesListPresenter.setData(movies);
+
+                setUpRecyclerView(
+                (RecyclerView) findViewById(R.id.recyclerView),
+                new LinearLayoutManager(this)
+        );
+
+
     }
 }

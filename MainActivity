@@ -1,0 +1,26 @@
+public class MainActivity extends AppCompatActivity implements  MovieAPIAndRecyclerViewContract.View{
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Resources resources = getResources();
+        APIServiceModel apiServiceModel = new APIServiceModel(resources.getString(R.string.base_url));
+
+
+
+        new MainPresenter(apiServiceModel, this, new MoviesListPresenter()).setUpRecyclerView(
+                (RecyclerView) findViewById(R.id.recyclerView),
+                new LinearLayoutManager(this), new ArrayList()
+                );
+
+
+
+    }
+
+    @Override
+    public String getAPIKey() {
+        return getResources().getString(R.string.api_key);
+    }
+}

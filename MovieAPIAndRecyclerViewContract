@@ -1,0 +1,12 @@
+public interface MovieAPIAndRecyclerViewContract {
+
+    interface Presenter {
+        void setUpRecyclerView(RecyclerView recyclerView, LinearLayoutManager linearLayoutManager, List dataList);
+
+        List setRecyclerViewData();
+    }
+
+    interface View{
+        String getAPIKey();
+    }
+}

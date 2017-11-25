@@ -1,0 +1,32 @@
+//This class will retrieve the data from the retrofit call and pass the data as a List type to MainPresenter's class.
+
+public class MovieAPIPresenter{
+    APIServiceModel apiServiceModel;
+    MovieAPIPresenterListener listner;
+
+    public interface MovieAPIPresenterListener{
+        void moviesReady(List movies);
+    }
+
+    public MovieAPIPresenter(APIServiceModel apiServiceModel, MovieAPIPresenterListener listener){
+        this.apiServiceModel = apiServiceModel;
+        this.listner = listener;
+    }
+
+    public void getMovies(String apiKey, String language, String sortBy, String page){
+        final Call<POJOMovie> call = apiServiceModel.getAPI().getMovies(apiKey, language, sortBy, page);
+        POJOMovie movies = null;
+        try {
+            movies = call.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List result = new ArrayList();
+        for(int i = 0; i < 2;i++){
+            result.add(movies.getResults().get(i).getTitle());
+
+        }
+        listner.moviesReady(result);
+
+    }
+}

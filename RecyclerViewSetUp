@@ -1,0 +1,5 @@
+public interface RecyclerViewSetUp {
+        void getRecyclerViewData();
+        void setUpRecyclerView(RecyclerView recyclerView, LinearLayoutManager linearLayoutManager);
+
+}

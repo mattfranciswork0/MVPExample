@@ -17,7 +17,7 @@ public class MovieAPIPresenter{
             @Override
             public void onResponse(Call<POJOMovie> call, Response<POJOMovie> response) {
                 List result = new ArrayList();
-                int size = 2 ;
+                int size = 2 ; // changed size to 2 for simplicity/example project sake)
                 for(int i = 0; i < size;i++){
                     result.add(response.body().getResults().get(i).getTitle());
                 }

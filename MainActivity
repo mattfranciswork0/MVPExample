@@ -1,4 +1,5 @@
-public class MainActivity extends AppCompatActivity implements  MovieAPIAndRecyclerViewContract.View,
+public class MainActivity extends AppCompatActivity implements
+        RecyclerViewSetUp,
         MovieAPIPresenter.MovieAPIPresenterListener{
 
     MoviesListPresenter moviesListPresenter;
@@ -11,13 +12,31 @@ public class MainActivity extends AppCompatActivity implements  MovieAPIAndRecyc
 //        VehicleComponent component = DaggerVehicleComponent.builder().vehicleModule(new VehicleModule()).build();
 //        component.provideVehicle();
 
-        Resources resources = getResources();
-        APIServiceModel apiServiceModel = new APIServiceModel(resources.getString(R.string.base_url));
+
+        moviesListPresenter = new MoviesListPresenter();
+        getRecyclerViewData();
 
 
-         moviesListPresenter = new MoviesListPresenter();
-        new MainPresenter(apiServiceModel, this, this).setRecyclerViewData();
 
+    }
+
+    @Override
+    public void getRecyclerViewData() {
+        MovieAPIServiceModel movieApiServiceModel = new MovieAPIServiceModel();
+        new MovieAPIPresenter(movieApiServiceModel, this).
+                getMovies(movieApiServiceModel.getAPIKey(this),
+                        movieApiServiceModel.getLanguangeParam(),
+                        movieApiServiceModel.getSortBy(),  movieApiServiceModel.getPageCount());
+    }
+
+    @Override
+    public void moviesDataRetrieved(List movies) {
+        moviesListPresenter.setData(movies);
+
+        setUpRecyclerView(
+                (RecyclerView) findViewById(R.id.recyclerView),
+                new LinearLayoutManager(this)
+        );
 
     }
 
@@ -28,20 +47,7 @@ public class MainActivity extends AppCompatActivity implements  MovieAPIAndRecyc
         recyclerView.setAdapter(new MoviesAdapter(moviesListPresenter));
     }
 
-    @Override
-    public String getAPIKey() {
-        return getResources().getString(R.string.api_key);
-    }
-
-    @Override
-    public void moviesReady(List movies) {
-        moviesListPresenter.setData(movies);
-
-                setUpRecyclerView(
-                (RecyclerView) findViewById(R.id.recyclerView),
-                new LinearLayoutManager(this)
-        );
 
 
-    }
 }
+

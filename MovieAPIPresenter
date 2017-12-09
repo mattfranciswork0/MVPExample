@@ -1,23 +1,27 @@
+
 public class MovieAPIPresenter{
-    MovieAPIServiceModel movieApiServiceModel;
+    MovieAPIService movieApiService;
     MovieAPIPresenterListener listner;
+    Context context;
 
     public interface MovieAPIPresenterListener{
         void moviesDataRetrieved(List movies);
     }
 
-    public MovieAPIPresenter(MovieAPIServiceModel movieApiServiceModel, MovieAPIPresenterListener listener){
-        this.movieApiServiceModel = movieApiServiceModel;
+    public MovieAPIPresenter(Context context, MovieAPIPresenterListener listener){
+        this.context = context;
+        this.movieApiService = new MovieAPIService();
         this.listner = listener;
     }
 
-    public void getMovies(String apiKey, String language, String sortBy, String page){
-
-        movieApiServiceModel.getAPI().getMovies(apiKey, language, sortBy, page).enqueue(new Callback<POJOMovie>() {
+    public void getMovies(){
+        movieApiService.getAPI().getMovies(
+                movieApiService.getAPIKey(context),  movieApiService.getLanguangeParam(),
+                movieApiService.getSortBy(),  movieApiService.getPageCount()).enqueue(new Callback<POJOMovie>() {
             @Override
             public void onResponse(Call<POJOMovie> call, Response<POJOMovie> response) {
                 List result = new ArrayList();
-                int size = 2 ; // changed size to 2 for simplicity/example project sake)
+                int size = 2 ;
                 for(int i = 0; i < size;i++){
                     result.add(response.body().getResults().get(i).getTitle());
                 }

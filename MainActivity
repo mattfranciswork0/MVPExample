@@ -17,16 +17,12 @@ public class MainActivity extends AppCompatActivity implements
         getRecyclerViewData();
 
 
-
     }
 
     @Override
     public void getRecyclerViewData() {
-        MovieAPIServiceModel movieApiServiceModel = new MovieAPIServiceModel();
-        new MovieAPIPresenter(movieApiServiceModel, this).
-                getMovies(movieApiServiceModel.getAPIKey(this),
-                        movieApiServiceModel.getLanguangeParam(),
-                        movieApiServiceModel.getSortBy(),  movieApiServiceModel.getPageCount());
+        new MovieAPIPresenter(this, this).
+                getMovies();
     }
 
     @Override
@@ -50,4 +46,3 @@ public class MainActivity extends AppCompatActivity implements
 
 
 }
-
